@@ -56,12 +56,17 @@ public class Match {
         }
 
         world.setGrid(grid);
-
+        String msg = "";
         if (teamA.getSide() == 0) {
-            JOptionPane.showMessageDialog(null, teamA.getName() + " vs. " + teamB.getName());
+            msg = teamA.getName() + " vs. " + teamB.getName();
         } else {
-            JOptionPane.showMessageDialog(null, teamB.getName() + " vs. " + teamA.getName());
+            msg = teamB.getName() + " vs. " + teamA.getName();
         }
+        final JOptionPane pane = new JOptionPane(msg);
+        final JDialog d = pane.createDialog((JFrame)null, "Next Match");
+        System.out.println();
+        d.setLocation((int)d.getLocation().getX(),Math.max(0, (int)d.getLocation().getY()-300));
+        d.setVisible(true);
         System.out.println("Starting Match: " + teamA.getName() + " vs. " + teamB.getName());
 
         world.show();
@@ -70,7 +75,7 @@ public class Match {
         }
 
         winner = teamA.hasWon() ? teamA : teamB;
-        System.out.println(winner.getName() + " has won!");
+        System.out.println(teamA.getName() + ": " + teamA.getScore() + " " + teamB.getName() + ": " + teamB.getScore() + " Winner: " + winner.getName() + "\n");
         JOptionPane.showMessageDialog(null, winner.getName() + " has won!");
 
     }

@@ -15,6 +15,16 @@ public class TournamentRunner {
         teams.add(new SampleTeam("Team BLUE", Color.BLUE));
         teams.add(new SampleTeam("Team BLACK", Color.BLACK));
         teams.add(new SampleTeam("Team YELLOW", Color.YELLOW));
+        teams.add(new SampleTeam("Team RED", Color.RED));
+        teams.add(new SampleTeam("Team GREEN", Color.GREEN));
+        teams.add(new SampleTeam("Team BLUE", Color.BLUE));
+        teams.add(new SampleTeam("Team BLACK", Color.BLACK));
+        teams.add(new SampleTeam("Team YELLOW", Color.YELLOW));
+        teams.add(new SampleTeam("Team RED", Color.RED));
+        teams.add(new SampleTeam("Team GREEN", Color.GREEN));
+        teams.add(new SampleTeam("Team BLUE", Color.BLUE));
+        teams.add(new SampleTeam("Team BLACK", Color.BLACK));
+        teams.add(new SampleTeam("Team YELLOW", Color.YELLOW));
 
         CtfWorld world = new CtfWorld();
 

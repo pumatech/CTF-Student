@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class CtfWorld extends ActorWorld {
-    public static final int MAX_GAME_LENGTH = 100;
+    public static final int MAX_GAME_LENGTH = 1000;
 
     private ArrayList<AbstractPlayer> players;
     private Team teamA, teamB;
@@ -16,7 +16,7 @@ public class CtfWorld extends ActorWorld {
     public CtfWorld() {
         super();
         players = new ArrayList<AbstractPlayer>();
-        this.setMessage("Welcome to Capture the Flag");
+        this.setMessage("Click Run to begin");
     }
 
     public CtfWorld(Team a, Team b) {
@@ -24,7 +24,7 @@ public class CtfWorld extends ActorWorld {
         players = new ArrayList<AbstractPlayer>();
         teamA = a;
         teamB = b;
-        this.setMessage("Welcome to Capture the Flag");
+        this.setMessage("Click Run to begin");
     }
 
     public void step() {
@@ -33,13 +33,14 @@ public class CtfWorld extends ActorWorld {
             players.addAll(teamB.getPlayers());
         }
         steps++;
-        if (steps >= MAX_GAME_LENGTH) {
+        if (steps == MAX_GAME_LENGTH) {
             if (teamA.getScore() > teamB.getScore()) {
                 teamA.setHasWon();
             } else {
                 teamB.setHasWon();
             }
-        } else {
+            announceScores();
+        } else if (steps < MAX_GAME_LENGTH){
             Collections.shuffle(players);
             for (AbstractPlayer p : players) {
                 p.act();
