@@ -8,7 +8,7 @@ import java.util.Collections;
 
 public class CtfWorld extends ActorWorld {
     public static final int MAX_GAME_LENGTH = 1000;
-
+    public static String extra = "";
     private ArrayList<AbstractPlayer> players;
     private Team teamA, teamB;
     private int steps;
@@ -60,7 +60,9 @@ public class CtfWorld extends ActorWorld {
         scoreAnnouncement += teamA.getScore();
         scoreAnnouncement += "   \t" + teamB.getName() + ": ";
         scoreAnnouncement += teamB.getScore();
+        scoreAnnouncement += extra;
         this.setMessage(scoreAnnouncement);
+        extra = "";
     }
 
     public void setTeams(Team a, Team b) {

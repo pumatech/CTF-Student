@@ -11,12 +11,12 @@ import java.util.List;
 public abstract class AbstractPlayer extends Actor {
 
     private static final int MOVE = 1;
-    private static final int MOVE_ON_OPPONENT_SIDE = 1;
-    private static final int CAPTURE = 1;
-    private static final int TAG = 1;
-    private static final int CARRY = 1;
+    private static final int MOVE_ON_OPPONENT_SIDE = 2;
+    private static final int CAPTURE = 50;
+    private static final int TAG = 20;
+    private static final int CARRY = 5;
 
-    private static final int TURNTIME = 100; // The time the whole team has, in milliseconds. Each player is individually capped on time, not the team
+    private static final int TURNTIME = 250; // The time the whole team has, in milliseconds. Each player is individually capped on time, not the team
 
     private Team team;
     private boolean hasFlag;
@@ -25,10 +25,6 @@ public abstract class AbstractPlayer extends Actor {
 
     public AbstractPlayer(Location startLocation) {
         this.startLocation = startLocation;
-    }
-
-    private class LocationHolder {
-        public Location location = new Location(-1, -1);
     }
 
     public final void act() {
@@ -50,30 +46,57 @@ public abstract class AbstractPlayer extends Actor {
                 }
             } else {
                 processNeighbors();
-                LocationHolder loc = new LocationHolder();
+//                LocationHolder loc = new LocationHolder();
+//                Thread getMoveLocationThread = new Thread() {
+//                    @Override
+//                    public void run() {
+//                        Location l = getMoveLocation();
+//                        loc.location = l;
+//                    }
+//                };
+//                getMoveLocationThread.start();
+//                long timeLimit = TURNTIME / team.getPlayers().size();
+//                long startTime = System.currentTimeMillis();
+//                while (!this.getGrid().isValid(loc.location) && System.currentTimeMillis() - startTime < timeLimit) {
+//                    try {
+//                        Thread.sleep(1);
+//                    } catch (InterruptedException e) {
+//
+//                    }
+//                }
+//                if (!getMoveLocationThread.isInterrupted()) {
+//                    getMoveLocationThread.interrupt();
+//                    CtfWorld.extra += " Timeout.";
+//                }
+                Location loc = new Location (-1, -1);
                 Thread getMoveLocationThread = new Thread() {
                     @Override
                     public void run() {
                         Location l = getMoveLocation();
-                        loc.location = l;
+                        loc.setCol(l.getCol());
+                        loc.setRow(l.getRow());
                     }
                 };
                 getMoveLocationThread.start();
                 long timeLimit = TURNTIME / team.getPlayers().size();
                 long startTime = System.currentTimeMillis();
-                while (!this.getGrid().isValid(loc.location) && System.currentTimeMillis() - startTime < timeLimit) {
+                while (!this.getGrid().isValid(loc) && System.currentTimeMillis() - startTime < timeLimit) {
                     try {
-                        Thread.sleep(1);
+                        Thread.sleep(2);
                     } catch (InterruptedException e) {
 
                     }
                 }
-                if (!getMoveLocationThread.isInterrupted()) {
-                    getMoveLocationThread.interrupt();
+                if (getMoveLocationThread.isAlive()) {
+                    getMoveLocationThread.stop();
+                    System.out.println("Player ran out of time: " + this);
+                    CtfWorld.extra += " Time";
                 }
-                makeMove(!this.getGrid().isValid(loc.location) ? this.getLocation() : loc.location); // fixed behavior
+
+                makeMove(!this.getGrid().isValid(loc) ? null : loc); // null = don't move
             }
         } catch (Exception e) {
+            CtfWorld.extra += " Err";
             System.err.println("Player " + this + " has generated the runtime exception: " + e);
         }
     }
@@ -164,6 +187,7 @@ public abstract class AbstractPlayer extends Actor {
 
     public final void removeSelfFromGrid() {
         System.err.println("Someone has cheated and tried to remove a player from the grid");
+        CtfWorld.extra += " Cheat";
     }
 
     protected final void setTeam(Team team) {
@@ -186,8 +210,14 @@ public abstract class AbstractPlayer extends Actor {
     public final Team getTeam() {
         return team;
     }
+    public final Team getMyTeam() {
+        return team;
+    }
+    public final Team getOtherTeam() {
+        return team.getOpposingTeam();
+    }
 
-    public Location getLocation() {
+    public final Location getLocation() {
         return new Location(super.getLocation().getRow(), super.getLocation().getCol());
     }
 }
