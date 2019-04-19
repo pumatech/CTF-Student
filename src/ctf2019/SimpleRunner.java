@@ -16,7 +16,7 @@ public class SimpleRunner {
         a.setOpposingTeam(b);
         b.setOpposingTeam(a);
 
-        Match match = new Match(a, b, world, 50);
+        Match match = new Match(a, b, world, 10);
         match.start();
     }
 }
