@@ -91,7 +91,7 @@ public abstract class Team {
     }
 
     protected final void addScore(int s) {
-        score += s; // could be cheated
+        score += s;
     }
 
     public final Location adjustForSide(Location loc, Grid<Actor> grid) {
