@@ -5,6 +5,7 @@ import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public abstract class AbstractPlayer extends Actor {
     private static final int TAG = 20;
     private static final int CARRY = 5;
 
-    private static final int TURNTIME = 250; // The time the whole team has, in milliseconds. Each player is individually capped on time, not the team
+    private static final int TURNTIME = 500; // The time the whole team has, in milliseconds. Each player is individually capped on time, not the team
 
     private Team team;
     private boolean hasFlag;
@@ -27,6 +28,7 @@ public abstract class AbstractPlayer extends Actor {
         this.startLocation = startLocation;
     }
 
+    @SuppressWarnings("deprecation")
     public final void act() {
         try {
             if (team.hasWon() || team.getOpposingTeam().hasWon()) {
@@ -40,11 +42,13 @@ public abstract class AbstractPlayer extends Actor {
             }
 
             if (tagCoolDown > 0) {
+                setColor(Color.BLACK);
                 tagCoolDown--;
                 if (tagCoolDown == 0) {
                     setColor(team.getColor());
                 }
-            } else {
+            }
+            else {
                 processNeighbors();
 //                LocationHolder loc = new LocationHolder();
 //                Thread getMoveLocationThread = new Thread() {
@@ -68,7 +72,7 @@ public abstract class AbstractPlayer extends Actor {
 //                    getMoveLocationThread.interrupt();
 //                    CtfWorld.extra += " Timeout.";
 //                }
-                Location loc = new Location (-1, -1);
+                Location loc = new Location(-1, -1);
                 Thread getMoveLocationThread = new Thread() {
                     @Override
                     public void run() {
@@ -83,7 +87,8 @@ public abstract class AbstractPlayer extends Actor {
                 while (!this.getGrid().isValid(loc) && System.currentTimeMillis() - startTime < timeLimit) {
                     try {
                         Thread.sleep(2);
-                    } catch (InterruptedException e) {
+                    }
+                    catch (InterruptedException e) {
 
                     }
                 }
@@ -95,7 +100,8 @@ public abstract class AbstractPlayer extends Actor {
 
                 makeMove(!this.getGrid().isValid(loc) ? null : loc); // null = don't move
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             CtfWorld.extra += " Err";
             System.err.println("Player " + this + " has generated the runtime exception: " + e);
         }
@@ -132,31 +138,52 @@ public abstract class AbstractPlayer extends Actor {
     }
 
     private void makeMove(Location loc) {
-        if (loc == null || loc == getLocation()) {
-            loc = getLocation();
-        } else {
-            if (team.onSide(getLocation()) && getGrid().get(team.getFlag().getLocation()) instanceof Flag && team.nearFlag(getLocation())) {
-                int dir = getLocation().getDirectionToward(team.getFlag().getLocation()) + Location.HALF_CIRCLE;
-                loc = getLocation().getAdjacentLocation(dir);
-                while (getGrid().get(loc) != null) {
-                    System.out.println("Relocation from Flag failed. " + loc + "is occupied");
-                    loc = loc.getAdjacentLocation(dir);
-                }
-            } else {
-                loc = getLocation().getAdjacentLocation(getLocation().getDirectionToward(loc));
-            }
-            if (getGrid().isValid(loc) && getGrid().get(loc) == null) {
-                moveTo(loc);
-                if (team.onSide(getLocation()))
-                    team.addScore(MOVE);
-                else
-                    team.addScore(MOVE_ON_OPPONENT_SIDE);
-                team.addOffensiveMove();
-                if (this.hasFlag) {
-                    team.addScore(CARRY);
-                }
+        // can't move to a null location or to same location
+        if (loc == null || loc.equals(getLocation())) {
+            return;
+        }
+        // limit to one step towards desired location
+        loc = getLocation().getAdjacentLocation(getLocation().getDirectionToward(loc));
+
+        // Player is too close to own flag and not moving away from it, it must bounce
+        if (team.onSide(getLocation()) && getGrid().get(team.getFlag().getLocation()) instanceof Flag && team.nearFlag(getLocation()) && team.nearFlag(loc)) {
+            loc = bounce();
+            CtfWorld.extra += " Bounce";
+        }
+        // if Player is on own side and flag isn't being carried, it can't move too close to own flag
+        if (team.onSide(getLocation()) && getGrid().get(team.getFlag().getLocation()) instanceof Flag && team.nearFlag(loc)) {
+            CtfWorld.extra += " Close to flag";
+            return;
+        }
+
+        // move to loc and score appropriate points
+        if (getGrid().isValid(loc) && getGrid().get(loc) == null) {
+            this.setDirection(getLocation().getDirectionToward(loc));
+            moveTo(loc);
+            if (team.onSide(getLocation()))
+                team.addScore(MOVE);
+            else
+                team.addScore(MOVE_ON_OPPONENT_SIDE);
+            team.addOffensiveMove();
+            if (this.hasFlag) {
+                team.addScore(CARRY);
             }
         }
+
+    }
+
+    // get bounce-to location to move a player away from own flag
+    private Location bounce() {
+        // preferred option - move directly away from flag until no longer too close
+        int inc = Math.random()<.5?10:-10;
+
+        for (int i=0; i<360; i+=inc) {
+            int dir = team.getFlag().getLocation().getDirectionToward(getLocation()) + i;
+            Location loc = getLocation();
+            while (team.nearFlag(loc)) loc = loc.getAdjacentLocation(dir);
+            if (getGrid().isValid(loc) && getGrid().get(loc) == null && team.onSide(loc)) return loc;
+        }
+        return getLocation();   // failed to find any valid location - rare!
     }
 
     public abstract Location getMoveLocation();
@@ -166,7 +193,8 @@ public abstract class AbstractPlayer extends Actor {
         Location nextLoc;
         do {
             nextLoc = team.adjustForSide(new Location((int) (Math.random() * getGrid().getNumRows()), 0), getGrid());
-        } while (getGrid().get(nextLoc) != null);
+        }
+        while (getGrid().get(nextLoc) != null);
         moveTo(nextLoc);
         tagCoolDown = 10;
         if (hasFlag) {
@@ -210,14 +238,26 @@ public abstract class AbstractPlayer extends Actor {
     public final Team getTeam() {
         return team;
     }
+
     public final Team getMyTeam() {
         return team;
     }
+
     public final Team getOtherTeam() {
         return team.getOpposingTeam();
     }
 
     public final Location getLocation() {
         return new Location(super.getLocation().getRow(), super.getLocation().getCol());
+    }
+
+    public final void moveTo(Location loc) {
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.endsWith("AbstractPlayer"))
+            super.moveTo(loc);
+        else {
+            CtfWorld.extra += " Cheat";
+            System.out.println("This Player has attempted an unauthorized moveTo");
+        }
     }
 }

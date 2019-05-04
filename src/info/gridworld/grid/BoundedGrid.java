@@ -81,6 +81,7 @@ public class BoundedGrid<E> extends AbstractGrid<E>
 
         return theLocations;
     }
+    @SuppressWarnings("unchecked")
 
     public E get(Location loc)
     {
