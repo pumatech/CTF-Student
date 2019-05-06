@@ -61,14 +61,14 @@ public abstract class Team {
         for (AbstractPlayer player : players) {
             double dist = Math.sqrt(Math.pow(player.getStartLocation().getRow() - DEFAULT_FLAG_LOCATION.getRow(), 2)
                     + Math.pow(player.getStartLocation().getCol() - DEFAULT_FLAG_LOCATION.getCol(), 2));
-//            if (player.getStartLocation().getCol() >= grid.getNumCols() / 2 || player.getStartLocation().getCol() < 0 || dist < 10.0) {
-//                System.err.println("Someone has cheated and given their players an invalid start location");
-//                Location nextLoc;
-//                do {
-//                    nextLoc = new Location((int) (Math.random() * grid.getNumRows() - 1), 0);
-//                } while (grid.get(nextLoc) != null);
-//                player.setStartLocation(nextLoc);
-//            }
+            if (player.getStartLocation().getCol() >= grid.getNumCols() / 2 || player.getStartLocation().getCol() < 0 || dist < 10.0) {
+                System.err.println("Someone has cheated and given their players an invalid start location");
+                Location nextLoc;
+                do {
+                    nextLoc = new Location((int) (Math.random() * grid.getNumRows() - 1), 0);
+                } while (grid.get(nextLoc) != null);
+                player.setStartLocation(nextLoc);
+            }
             player.putSelfInGridProtected(grid, adjustForSide(player.getStartLocation(), grid));
         }
     }

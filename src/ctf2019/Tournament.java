@@ -1,6 +1,9 @@
 package ctf2019;
 
+import ctf2019.teams.sample.SampleTeam;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
@@ -15,6 +18,20 @@ public class Tournament {
     }
 
     public void start() {
+        // start with a dummy match to "warm up" Java
+
+        Team a = new SampleTeam("Dummy 1", Color.RED);
+        Team b = new SampleTeam("Dummy 2", Color.BLUE);
+        CtfWorld world = new CtfWorld(a, b);
+
+        a.setOpposingTeam(b);
+        b.setOpposingTeam(a);
+
+        Match dummy = new Match(a, b, world, 10);
+        dummy.start();
+
+        world.getFrame().dispose();
+
         ArrayList<Team> teamsToPlay = new ArrayList<>();
         teamsToPlay.addAll(teams);
         ArrayList<Team> winningTeams = new ArrayList<>();
