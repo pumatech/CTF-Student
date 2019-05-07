@@ -139,14 +139,17 @@ public abstract class AbstractPlayer extends Actor {
 
     private void makeMove(Location loc) {
         // can't move to a null location or to same location
-        if (loc == null || loc.equals(getLocation())) {
+        if (loc == null) {
             return;
         }
+
         // limit to one step towards desired location
-        loc = getLocation().getAdjacentLocation(getLocation().getDirectionToward(loc));
+        if (!loc.equals(getLocation()))
+            loc = getLocation().getAdjacentLocation(getLocation().getDirectionToward(loc));
 
         // Player is too close to own flag and not moving away from it, it must bounce
         if (team.onSide(getLocation()) && getGrid().get(team.getFlag().getLocation()) instanceof Flag && team.nearFlag(getLocation()) && team.nearFlag(loc)) {
+            System.out.println("Bounce");
             loc = bounce();
             CtfWorld.extra += " Bounce";
         }
@@ -157,7 +160,7 @@ public abstract class AbstractPlayer extends Actor {
         }
 
         // move to loc and score appropriate points
-        if (getGrid().isValid(loc) && getGrid().get(loc) == null) {
+        if (!loc.equals(getLocation()) && getGrid().isValid(loc) && getGrid().get(loc) == null) {
             this.setDirection(getLocation().getDirectionToward(loc));
             moveTo(loc);
             if (team.onSide(getLocation()))
