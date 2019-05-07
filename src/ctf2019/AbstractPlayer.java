@@ -149,7 +149,6 @@ public abstract class AbstractPlayer extends Actor {
 
         // Player is too close to own flag and not moving away from it, it must bounce
         if (team.onSide(getLocation()) && getGrid().get(team.getFlag().getLocation()) instanceof Flag && team.nearFlag(getLocation()) && team.nearFlag(loc)) {
-            System.out.println("Bounce");
             loc = bounce();
             CtfWorld.extra += " Bounce";
         }
