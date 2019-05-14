@@ -138,9 +138,9 @@ public abstract class AbstractPlayer extends Actor {
     }
 
     private void makeMove(Location loc) {
-        // can't move to a null location or to same location
+        // if null, treat as if you are staying in same location
         if (loc == null) {
-            return;
+            loc = getLocation();
         }
 
         // limit to one step towards desired location
