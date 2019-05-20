@@ -40,15 +40,15 @@ public class Bracket extends JPanel {
     }
 
     public Dimension getPreferredSize() {
-        return new Dimension(800, 800);
+        return new Dimension(1000, 1200);
     }
 
     public Dimension getMinimumSize() {
-        return new Dimension(800, 800);
+        return new Dimension(1000, 1200);
     }
 
     public Dimension getMaximumSize() {
-        return new Dimension(800, 800);
+        return new Dimension(1000, 1200);
     }
 
     public void paintComponent(Graphics g) {

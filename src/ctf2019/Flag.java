@@ -22,8 +22,14 @@ public class Flag extends Actor {
         this.carrier = player;
     }
 
-    public void removeSelfFromGrid() {
-        System.err.println("Someone has cheated and tried to remove the flag from the grid");
+    public final void removeSelfFromGrid() {
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.endsWith("CtfWorld"))
+            super.removeSelfFromGrid();
+        else {
+            System.err.println("Someone has cheated and tried to remove a player from the grid");
+            CtfWorld.extra += " Cheat";
+        }
     }
 
     public Team getTeam() {

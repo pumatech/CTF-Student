@@ -61,8 +61,8 @@ import javax.swing.ToolTipManager;
 public class GridPanel extends JPanel implements Scrollable,
         PseudoInfiniteViewport.Pannable
 {
-    private static final int MIN_CELL_SIZE = 13;
-    private static final int DEFAULT_CELL_SIZE = 13;
+    private static final int MIN_CELL_SIZE = 16;
+    private static final int DEFAULT_CELL_SIZE = 16;
     private static final int DEFAULT_CELL_COUNT = 10;
     private static final int TIP_DELAY = 1000;
 

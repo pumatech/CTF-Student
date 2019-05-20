@@ -72,6 +72,9 @@ public abstract class AbstractPlayer extends Actor {
 //                    getMoveLocationThread.interrupt();
 //                    CtfWorld.extra += " Timeout.";
 //                }
+
+//                Location loc = getMoveLocation();
+
                 Location loc = new Location(-1, -1);
                 Thread getMoveLocationThread = new Thread() {
                     @Override
@@ -89,6 +92,7 @@ public abstract class AbstractPlayer extends Actor {
                         Thread.sleep(2);
                     }
                     catch (InterruptedException e) {
+                        e.printStackTrace();
 
                     }
                 }
@@ -103,7 +107,8 @@ public abstract class AbstractPlayer extends Actor {
         }
         catch (Exception e) {
             CtfWorld.extra += " Err";
-            System.err.println("Player " + this + " has generated the runtime exception: " + e);
+            System.err.println("Player " + this + " has generated a runtime exception");
+            e.printStackTrace();
         }
     }
 
@@ -216,8 +221,13 @@ public abstract class AbstractPlayer extends Actor {
     }
 
     public final void removeSelfFromGrid() {
-        System.err.println("Someone has cheated and tried to remove a player from the grid");
-        CtfWorld.extra += " Cheat";
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.endsWith("CtfWorld"))
+            super.removeSelfFromGrid();
+        else {
+            System.err.println("Someone has cheated and tried to remove a player from the grid");
+            CtfWorld.extra += " Cheat";
+        }
     }
 
     protected final void setTeam(Team team) {
@@ -261,5 +271,8 @@ public abstract class AbstractPlayer extends Actor {
             CtfWorld.extra += " Cheat";
             System.out.println("This Player has attempted an unauthorized moveTo");
         }
+    }
+    public String toString() {
+        return "AbstractPlayer";
     }
 }

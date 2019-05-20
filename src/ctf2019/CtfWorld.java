@@ -56,10 +56,15 @@ public class CtfWorld extends ActorWorld {
     }
 
     protected final void announceScores() {
-        String scoreAnnouncement = "step: " + steps + "   \t" + teamA.getName() + ": ";
-        scoreAnnouncement += teamA.getScore();
-        scoreAnnouncement += "   \t" + teamB.getName() + ": ";
-        scoreAnnouncement += teamB.getScore();
+        String scoreAnnouncement = "step: " + steps + "   \t";
+        if (teamA.getSide() == 0) {
+            scoreAnnouncement += teamA.getName() + ": " + teamA.getScore();
+            scoreAnnouncement += "   \t" + teamB.getName() + ": " + teamB.getScore();
+        }
+        else {
+            scoreAnnouncement += teamB.getName() + ": " + teamB.getScore();
+            scoreAnnouncement += "   \t" + teamA.getName() + ": " + teamA.getScore();
+        }
         scoreAnnouncement += extra;
         this.setMessage(scoreAnnouncement);
         extra = "";
