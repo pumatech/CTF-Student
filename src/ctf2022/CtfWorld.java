@@ -9,19 +9,19 @@ import java.util.Collections;
 public class CtfWorld extends ActorWorld {
     public static final int MAX_GAME_LENGTH = 1000;
     public static String extra = "";
-    private ArrayList<AbstractPlayer> players;
+    private ArrayList<Player> players;
     private Team teamA, teamB;
     private int steps;
 
     public CtfWorld() {
         super();
-        players = new ArrayList<AbstractPlayer>();
+        players = new ArrayList<Player>();
         this.setMessage("Click Run to begin");
     }
 
     public CtfWorld(Team a, Team b) {
         super();// img won't work
-        players = new ArrayList<AbstractPlayer>();
+        players = new ArrayList<Player>();
         teamA = a;
         teamB = b;
         this.setMessage("Click Run to begin");
@@ -42,7 +42,7 @@ public class CtfWorld extends ActorWorld {
             announceScores();
         } else if (steps < MAX_GAME_LENGTH){
             Collections.shuffle(players);
-            for (AbstractPlayer p : players) {
+            for (Player p : players) {
                 p.act();
                 if (p.hasFlag()) {
                     if (p.getTeam().onSide(p.getLocation())) {

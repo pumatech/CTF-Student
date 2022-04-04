@@ -6,7 +6,7 @@ import info.gridworld.grid.Location;
 public class Flag extends Actor {
 
     private Team team;
-    private AbstractPlayer carrier;
+    private Player carrier;
 
     public Flag(Team team) {
         this.team = team;
@@ -17,7 +17,7 @@ public class Flag extends Actor {
     public void act() {
     } // I want only players to get called to act
 
-    protected void pickUp(AbstractPlayer player) {
+    protected void pickUp(Player player) {
         super.removeSelfFromGrid();
         this.carrier = player;
     }

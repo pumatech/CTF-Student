@@ -1,10 +1,10 @@
 package ctf2022;
 
-import ctf2022.teams.sample.SampleTeam;
+import ctf2022.sampleTeam.SampleTeam;
 
 import java.awt.*;
 
-public class SimpleRunner {
+public class MatchRunner {
 
     public static void main(String[] args) {
 

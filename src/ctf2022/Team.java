@@ -11,7 +11,7 @@ public abstract class Team {
     public static final int MAX_SIZE = 8;
     public static final Location DEFAULT_FLAG_LOCATION = new Location(24, 10);
 
-    private ArrayList<AbstractPlayer> players;
+    private ArrayList<Player> players;
     private Grid<Actor> grid;
     private Flag flag;
     private Team opposingTeam;
@@ -38,7 +38,7 @@ public abstract class Team {
         generateTeam();
     }
 
-    public final void addPlayer(AbstractPlayer player) {
+    public final void addPlayer(Player player) {
         if (players.size() < MAX_SIZE) {
             players.add(player);
             player.setTeam(this);
@@ -58,7 +58,7 @@ public abstract class Team {
         flag = new Flag(this);
         flag.putSelfInGrid(grid, adjustForSide(DEFAULT_FLAG_LOCATION, grid));
         resetTeam();
-        for (AbstractPlayer player : players) {
+        for (Player player : players) {
             double dist = Math.sqrt(Math.pow(player.getStartLocation().getRow() - DEFAULT_FLAG_LOCATION.getRow(), 2)
                     + Math.pow(player.getStartLocation().getCol() - DEFAULT_FLAG_LOCATION.getCol(), 2));
             if (player.getStartLocation().getCol() >= grid.getNumCols() / 2 || player.getStartLocation().getCol() < 0 || dist < 10.0) {
@@ -122,8 +122,8 @@ public abstract class Team {
         //return Math.sqrt(Math.pow(loc.getRow() - flag.getLocation().getRow(), 2) + Math.pow(loc.getCol() - flag.getLocation().getCol(), 2)) <= 4;
     }
 
-    public final ArrayList<AbstractPlayer> getPlayers() {
-        return (ArrayList<AbstractPlayer>) players.clone();
+    public final ArrayList<Player> getPlayers() {
+        return (ArrayList<Player>) players.clone();
     }
 
     public final Flag getFlag() {

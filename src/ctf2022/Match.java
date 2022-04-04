@@ -97,7 +97,7 @@ public class Match {
     }
 
     private boolean nearPlayer(Team t, Location loc) {
-        for (AbstractPlayer p : t.getPlayers()) {
+        for (Player p : t.getPlayers()) {
             if (distance(p.getLocation(), loc) < 3)
                 return true;
         }

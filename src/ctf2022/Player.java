@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractPlayer extends Actor {
+public abstract class Player extends Actor {
 
     // point values for different actions
     private static final int MOVE = 1;
@@ -25,7 +25,7 @@ public abstract class AbstractPlayer extends Actor {
     private Location startLocation;
     private int tagCoolDown;
 
-    public AbstractPlayer(Location startLocation) {
+    public Player(Location startLocation) {
         this.startLocation = startLocation;
     }
 
@@ -116,7 +116,7 @@ public abstract class AbstractPlayer extends Actor {
         List<Location> neighborLocations = getGrid().getOccupiedAdjacentLocations(getLocation());
         for (int i = neighborLocations.size() - 1; i >= 0; i--) {
             Actor neighbor = getGrid().get(neighborLocations.get(i));
-            if (!(neighbor instanceof AbstractPlayer) || ((AbstractPlayer) neighbor).team.equals(team)) {
+            if (!(neighbor instanceof Player) || ((Player) neighbor).team.equals(team)) {
                 neighborLocations.remove(i);
                 if (neighbor instanceof Flag && !((Flag) neighbor).getTeam().equals(team)) {
                     hasFlag = true;
@@ -132,8 +132,8 @@ public abstract class AbstractPlayer extends Actor {
             for (Location neighborLocation : neighborLocations) {
                 if (team.onSide(neighborLocation)) {
                     Actor neighbor = getGrid().get(neighborLocation);
-                    if (((AbstractPlayer) neighbor).hasFlag() || Math.random() < (1. / neighborLocations.size())) {
-                        ((AbstractPlayer) neighbor).tag();
+                    if (((Player) neighbor).hasFlag() || Math.random() < (1. / neighborLocations.size())) {
+                        ((Player) neighbor).tag();
                         team.addScore(TAG);
                         team.addTag();
                     }
@@ -265,7 +265,7 @@ public abstract class AbstractPlayer extends Actor {
 
     public final void moveTo(Location loc) {
         String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
-        if (callingClass.endsWith("AbstractPlayer"))
+        if (callingClass.endsWith("Player"))
             super.moveTo(loc);
         else {
             CtfWorld.extra += " Cheat";
@@ -273,6 +273,6 @@ public abstract class AbstractPlayer extends Actor {
         }
     }
     public String toString() {
-        return "AbstractPlayer";
+        return "Player";
     }
 }
