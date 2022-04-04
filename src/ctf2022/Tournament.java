@@ -1,10 +1,9 @@
-package ctf2019;
+package ctf2022;
 
-import ctf2019.teams.sample.SampleTeam;
+import ctf2022.teams.sample.SampleTeam;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class Tournament {

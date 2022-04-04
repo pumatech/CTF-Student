@@ -1,8 +1,8 @@
-package ctf2019.teams.sample;
+package ctf2022.teams.sample;
 
 import java.util.List;
 
-import ctf2019.AbstractPlayer;
+import ctf2022.AbstractPlayer;
 
 import info.gridworld.grid.Location;
 

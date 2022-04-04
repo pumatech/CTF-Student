@@ -1,11 +1,10 @@
-package ctf2019;
+package ctf2022;
 
 import info.gridworld.actor.Actor;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

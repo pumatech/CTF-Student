@@ -1,8 +1,7 @@
-package ctf2019;
+package ctf2022;
 
-import ctf2019.teams.GoGo.GoGoTeam;
-import ctf2019.teams.sample.SampleTeam;
-import info.gridworld.actor.Rock;
+import ctf2022.teams.GoGo.GoGoTeam;
+import ctf2022.teams.sample.SampleTeam;
 
 import java.awt.*;
 

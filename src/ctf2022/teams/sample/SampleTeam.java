@@ -1,8 +1,8 @@
-package ctf2019.teams.sample;
+package ctf2022.teams.sample;
 
 import java.awt.Color;
 
-import ctf2019.Team;
+import ctf2022.Team;
 
 import info.gridworld.grid.Location;
 

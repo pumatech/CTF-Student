@@ -1,4 +1,4 @@
-package ctf2019;
+package ctf2022;
 
 import javax.swing.*;
 import java.awt.*;
