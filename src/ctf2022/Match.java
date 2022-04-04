@@ -15,17 +15,17 @@ public class Match {
     private Team winner;
     private CtfWorld world;
 
-    public Match(Team a, Team b, CtfWorld w) {
+    public Match(Team a, Team b) {
         teamA = a;
         teamB = b;
-        world = w;
+        world = new CtfWorld(a, b);
         numRocks = 75;
     }
 
-    public Match(Team a, Team b, CtfWorld w, int rocks) {
+    public Match(Team a, Team b, int rocks) {
         teamA = a;
         teamB = b;
-        world = w;
+        world = new CtfWorld(a, b);
         numRocks = rocks;
     }
 

@@ -10,13 +10,15 @@ import java.util.List;
 
 public abstract class AbstractPlayer extends Actor {
 
+    // point values for different actions
     private static final int MOVE = 1;
     private static final int MOVE_ON_OPPONENT_SIDE = 2;
     private static final int CAPTURE = 50;
     private static final int TAG = 20;
     private static final int CARRY = 5;
 
-    private static final int TURNTIME = 500; // The time the whole team has, in milliseconds. Each player is individually capped on time, not the team
+    // The time the whole team has, in milliseconds. Each player is individually capped on time, not the team
+    private static final int TURNTIME = 500;
 
     private Team team;
     private boolean hasFlag;
@@ -27,7 +29,6 @@ public abstract class AbstractPlayer extends Actor {
         this.startLocation = startLocation;
     }
 
-    @SuppressWarnings("deprecation")
     public final void act() {
         try {
             if (team.hasWon() || team.getOpposingTeam().hasWon()) {
@@ -111,7 +112,7 @@ public abstract class AbstractPlayer extends Actor {
         }
     }
 
-    private void processNeighbors() {
+    private final void processNeighbors() {
         List<Location> neighborLocations = getGrid().getOccupiedAdjacentLocations(getLocation());
         for (int i = neighborLocations.size() - 1; i >= 0; i--) {
             Actor neighbor = getGrid().get(neighborLocations.get(i));
@@ -141,7 +142,7 @@ public abstract class AbstractPlayer extends Actor {
         }
     }
 
-    private void makeMove(Location loc) {
+    private final void makeMove(Location loc) {
         // if null, treat as if you are staying in same location
         if (loc == null) {
             loc = getLocation();
@@ -179,7 +180,7 @@ public abstract class AbstractPlayer extends Actor {
     }
 
     // get bounce-to location to move a player away from own flag
-    private Location bounce() {
+    private final Location bounce() {
         // preferred option - move directly away from flag until no longer too close
         int inc = Math.random()<.5?10:-10;
 
@@ -194,7 +195,7 @@ public abstract class AbstractPlayer extends Actor {
 
     public abstract Location getMoveLocation();
 
-    private void tag() {
+    private final void tag() {
         Location oldLoc = getLocation();
         Location nextLoc;
         do {

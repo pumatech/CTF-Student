@@ -12,13 +12,10 @@ public class BeelinePlayer extends AbstractPlayer {
 
 	public Location getMoveLocation() {
 		int dir;
-		if (hasFlag()) {
-			dir = this.getLocation().getDirectionToward(getMyTeam().getFlag().getLocation());
+		if (this.hasFlag()) {
+			return this.getMyTeam().getFlag().getLocation();
+		} else {
+			return getOtherTeam().getFlag().getLocation();
 		}
-		else {
-			dir = this.getLocation().getDirectionToward(getOtherTeam().getFlag().getLocation());
-		}
-		return this.getLocation().getAdjacentLocation(dir);
 	}
-
 }
