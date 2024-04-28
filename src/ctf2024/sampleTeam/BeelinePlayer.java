@@ -1,6 +1,6 @@
-package ctf2022.sampleTeam;
+package ctf2024.sampleTeam;
 
-import ctf2022.Player;
+import ctf2024.Player;
 
 import info.gridworld.grid.Location;
 

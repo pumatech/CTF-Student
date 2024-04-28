@@ -1,4 +1,4 @@
-package ctf2022;
+package ctf2024;
 
 import info.gridworld.actor.Actor;
 import info.gridworld.grid.Grid;

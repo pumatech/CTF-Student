@@ -1,6 +1,6 @@
-package ctf2022;
+package ctf2024;
 
-import ctf2022.sampleTeam.SampleTeam;
+import ctf2024.sampleTeam.SampleTeam;
 
 import java.awt.*;
 
