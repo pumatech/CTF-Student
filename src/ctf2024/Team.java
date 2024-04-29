@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  * The class defines a CTF Team, which consists of an ArrayList of 8 Players,
- * a Flag, a team color, a team name, whcih side of the field the Team is on,
+ * a Flag, a team color, a team name, which side of the field the Team is on,
  * and various instance variable to help determine the team's score throughout
  * a match.
  */
@@ -47,7 +47,7 @@ public abstract class Team {
     /**
      * Generates a Team by adding Players (done in an extending subclass)
      */
-    public void generateTeam() {
+    private final void generateTeam() {
     }
 
     /**
@@ -78,7 +78,7 @@ public abstract class Team {
     /**
      * Places all Players and Flag from a Team onto the correct side of the Grid.
      * Players can not be placed too close to their own Flag or they will be automatically
-     * relocated.
+     * relocated.  NOT CALLABLE BY STUDENTS
      *
      * @param grid the Grid to add the Team to
      * @param side the side to add the Team to (if on the right, Players will be
@@ -111,21 +111,21 @@ public abstract class Team {
     }
 
     /**
-     * Scores a Flag pick-up
+     * Scores a Flag pick-up. NOT CALLABLE BY STUDENTS
      */
     protected final void addPickUp() {
         pickUps++;
     }
 
     /**
-     * Scores a tag
+     * Scores a tag. NOT CALLABLE BY STUDENTS
      */
     protected final void addTag() {
         tags++;
     }
 
     /**
-     * Scores an offensive move
+     * Scores an offensive move. NOT CALLABLE BY STUDENTS
      */
 
     protected final void addOffensiveMove() {
@@ -135,7 +135,7 @@ public abstract class Team {
     }
 
     /**
-     * Displays a Team's stats in the World's status area
+     * Displays a Team's stats in the console - usefulful for debugging.  DO NOT USE IF FINAL CODE
      *
      * @param steps - how many steps
      */
@@ -145,9 +145,9 @@ public abstract class Team {
     }
 
     /**
-     * Adds points to the Team's score
+     * Adds points to the Team's score. NOT CALLABLE BY STUDENTS
      *
-     * @param s
+     * @param s The score to add
      */
     protected final void addScore(int s) {
         score += s;
@@ -156,18 +156,18 @@ public abstract class Team {
     /**
      * Adjusts a Location to the proper side
      *
-     * @param loc
-     * @param grid
-     * @return
+     * @param loc The location to be adjusted
+     * @param grid The grid in which the Location is valid
+     * @return The adjusted Location
      */
-    public final Location adjustForSide(Location loc, Grid<Actor> grid) {
+    private final Location adjustForSide(Location loc, Grid<Actor> grid) {
         return new Location(loc.getRow(), (side == 0 ? loc.getCol() : grid.getNumCols() - 1 - loc.getCol()));
     }
 
     /**
      * Setter for Opposing Team
      *
-     * @param opposingTeam
+     * @param opposingTeam The opposing Team
      */
     protected final void setOpposingTeam(Team opposingTeam) {
         this.opposingTeam = opposingTeam;
@@ -183,8 +183,8 @@ public abstract class Team {
     /**
      * Checks a Location to see if it is on this Team's side or not
      *
-     * @param loc
-     * @return
+     * @param loc The Location to check
+     * @return Whether it's on this Team's side
      */
     public final boolean onSide(Location loc) {
         return side == 0 && loc.getCol() < grid.getNumCols() / 2 || side == 1 && loc.getCol() >= grid.getNumCols() / 2;
@@ -204,9 +204,9 @@ public abstract class Team {
     }
 
     /**
-     * Getter for the list of a Team's Players
+     * Getter for the ArrayList of a Team's Players
      *
-     * @return
+     * @return This Team's Players
      */
     public final ArrayList<Player> getPlayers() {
         return (ArrayList<Player>) players.clone();
@@ -215,7 +215,7 @@ public abstract class Team {
     /**
      * Getter for the Team's Flag
      *
-     * @return
+     * @return This Team's Flag instance
      */
     public final Flag getFlag() {
         return flag;
@@ -224,7 +224,7 @@ public abstract class Team {
     /**
      * Getter for the instance of the opposing Team
      *
-     * @return
+     * @return The opposing Team instance
      */
     public final Team getOpposingTeam() {
         return opposingTeam;
@@ -233,7 +233,7 @@ public abstract class Team {
     /**
      * Getter for a Team's Color
      *
-     * @return
+     * @return The Team's Color
      */
     public final Color getColor() {
         return color;
@@ -242,7 +242,7 @@ public abstract class Team {
     /**
      * Getter for a Team's name
      *
-     * @return
+     * @return The Team's name
      */
     public final String getName() {
         return name;
@@ -251,7 +251,7 @@ public abstract class Team {
     /**
      * Getter for a Team's score
      *
-     * @return
+     * @return The Team's current score
      */
     public final int getScore() {
         return score;
@@ -260,7 +260,7 @@ public abstract class Team {
     /**
      * Getter for a Team's Side (0=Left, 1=Right)
      *
-     * @return
+     * @return The Team's side
      */
     public final int getSide() {
         return side;
@@ -269,7 +269,7 @@ public abstract class Team {
     /**
      * Getter to determine if a Team has won
      *
-     * @return
+     * @return Whether a Team has won
      */
     public final boolean hasWon() {
         return hasWon;
@@ -278,8 +278,8 @@ public abstract class Team {
     /**
      * Compares another t=Team to see if it is the same as this Team
      *
-     * @param team
-     * @return
+     * @param team The other Team
+     * @return Whether this Team is the same as the other Team
      */
     public final boolean equals(Team team) {
         return team.getSide() == side && team.getColor().equals(color) && team.getClass() == getClass();
