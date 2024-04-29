@@ -47,7 +47,7 @@ public abstract class Team {
     /**
      * Generates a Team by adding Players (done in an extending subclass)
      */
-    private final void generateTeam() {
+    public void generateTeam() {
     }
 
     /**
@@ -55,7 +55,7 @@ public abstract class Team {
      */
     private final void resetTeam() {
         players.clear();
-        generateTeam();
+        this.generateTeam();
     }
 
     /**
@@ -130,7 +130,6 @@ public abstract class Team {
 
     protected final void addOffensiveMove() {
         String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
-        System.out.println(callingClass);
         offensiveMoves++;
     }
 
@@ -160,7 +159,7 @@ public abstract class Team {
      * @param grid The grid in which the Location is valid
      * @return The adjusted Location
      */
-    private final Location adjustForSide(Location loc, Grid<Actor> grid) {
+    public final Location adjustForSide(Location loc, Grid<Actor> grid) {
         return new Location(loc.getRow(), (side == 0 ? loc.getCol() : grid.getNumCols() - 1 - loc.getCol()));
     }
 

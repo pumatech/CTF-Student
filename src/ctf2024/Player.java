@@ -8,6 +8,10 @@ import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class models a single Player.  Project Players must extend this class and not override any method other than
+ * getNextMove
+ */
 public abstract class Player extends Actor {
 
     // point values for different actions
@@ -25,11 +29,32 @@ public abstract class Player extends Actor {
     private Location startLocation;
     private int tagCoolDown;
 
+    /**
+     * Constructs a Player at a given Location
+     *
+     * @param startLocation The initial Location
+     */
     public Player(Location startLocation) {
         this.startLocation = startLocation;
     }
 
+    /**
+     * Basic act method for a Player - can only be called from CtfWorld
+     * The basic sequence of actions is:
+     * 1. Ensure that this is only being called by CtfWorld
+     * 2. Determine if a Player has won the game by crossing the center line with the Flag
+     * 3. Process all neighbors (might tag out other Player, get tagged out, pick up Flag, etc.)
+     * 3. Wait (no move allowed) if "cooling down" after being tagged out
+     * 4. Determine the next Location to move to by calling the extending class's getMoveLocation method
+     *    (must return a Location within the fixed allocated time, or Player does not move)
+     * 5. Attempt to move to the specified Location (must be valid, unoccupied, and not near own Flag, etc.)
+     */
     public final void act() {
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (!callingClass.endsWith("CtfWorld")) {
+            System.out.println("Someone has cheated and attempted to call act directly");
+            return;
+        }
         try {
             if (team.hasWon() || team.getOpposingTeam().hasWon()) {
                 if (team.hasWon()) {
@@ -47,8 +72,7 @@ public abstract class Player extends Actor {
                 if (tagCoolDown == 0) {
                     setColor(team.getColor());
                 }
-            }
-            else {
+            } else {
                 processNeighbors();
 //                LocationHolder loc = new LocationHolder();
 //                Thread getMoveLocationThread = new Thread() {
@@ -90,8 +114,7 @@ public abstract class Player extends Actor {
                 while (!this.getGrid().isValid(loc) && System.currentTimeMillis() - startTime < timeLimit) {
                     try {
                         Thread.sleep(2);
-                    }
-                    catch (InterruptedException e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
 
                     }
@@ -104,14 +127,16 @@ public abstract class Player extends Actor {
 
                 makeMove(!this.getGrid().isValid(loc) ? null : loc); // null = don't move
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             CtfWorld.extra += " Err";
             System.err.println("Player " + this + " has generated a runtime exception");
             e.printStackTrace();
         }
     }
 
+    /**
+     * Process this Player relative to its neighbors (tagging out, picking up Flag, etc.)
+     */
     private final void processNeighbors() {
         List<Location> neighborLocations = getGrid().getOccupiedAdjacentLocations(getLocation());
         for (int i = neighborLocations.size() - 1; i >= 0; i--) {
@@ -142,6 +167,10 @@ public abstract class Player extends Actor {
         }
     }
 
+    /**
+     * Move to specified Location (if allowed)
+     * @param loc
+     */
     private final void makeMove(Location loc) {
         // if null, treat as if you are staying in same location
         if (loc == null) {
@@ -182,9 +211,9 @@ public abstract class Player extends Actor {
     // get bounce-to location to move a player away from own flag
     private final Location bounce() {
         // preferred option - move directly away from flag until no longer too close
-        int inc = Math.random()<.5?10:-10;
+        int inc = Math.random() < .5 ? 10 : -10;
 
-        for (int i=0; i<360; i+=inc) {
+        for (int i = 0; i < 360; i += inc) {
             int dir = team.getFlag().getLocation().getDirectionToward(getLocation()) + i;
             Location loc = getLocation();
             while (team.nearFlag(loc)) loc = loc.getAdjacentLocation(dir);
@@ -193,8 +222,15 @@ public abstract class Player extends Actor {
         return getLocation();   // failed to find any valid location - rare!
     }
 
+    /**
+     * MUST be overridden by extending class
+     * @return The desired Location to move to
+     */
     public abstract Location getMoveLocation();
 
+    /**
+     * Tag out another Player
+     */
     private final void tag() {
         Location oldLoc = getLocation();
         Location nextLoc;
@@ -211,6 +247,11 @@ public abstract class Player extends Actor {
         setColor(Color.BLACK);
     }
 
+    /**
+     * Puts self in Grid (can't be overridden or extended)
+     * @param grid the Grid to put into
+     * @param loc the Location to be placed in
+     */
     protected final void putSelfInGridProtected(Grid<Actor> grid, Location loc) {
         if (getGrid() != null)
             super.removeSelfFromGrid();
@@ -220,6 +261,9 @@ public abstract class Player extends Actor {
         super.putSelfInGrid(grid, loc);
     }
 
+    /**
+     * Remove self from Grid - should never happen!
+     */
     public final void removeSelfFromGrid() {
         String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
         if (callingClass.endsWith("CtfWorld"))
@@ -230,39 +274,75 @@ public abstract class Player extends Actor {
         }
     }
 
+    /**
+     * sets a Players Team - NOT CALLABLE BY STUDENTS
+     * @param team
+     */
     protected final void setTeam(Team team) {
         this.team = team;
         setColor(team.getColor());
     }
 
+    /**
+     * Sets a Player's starting Location - NOT CALLABLE BY STUDENTS
+     * @param startLocation
+     */
     protected final void setStartLocation(Location startLocation) {
         this.startLocation = startLocation;
     }
 
+    /**
+     * Getter to determine if a Player is carrying the Flag
+     * @return
+     */
     public final boolean hasFlag() {
         return hasFlag;
     }
 
+    /**
+     * Getter for a Player's starting Location
+     * @return
+     */
     protected final Location getStartLocation() {
         return startLocation;
     }
 
+    /**
+     * Getter for a Player's Team - duplicate of getMyTeam
+     * @return the Players Team
+     */
     public final Team getTeam() {
         return team;
     }
 
+    /**
+     * Getter for a Player's Team - duplicate of getTeam
+     * @return the Players Team
+     */
     public final Team getMyTeam() {
         return team;
     }
 
+    /**
+     * Getter to get a Player's opponent's Team
+     * @return The opponent's Team
+     */
     public final Team getOtherTeam() {
         return team.getOpposingTeam();
     }
 
+    /**
+     * Getter for a Player's Location (gets a cloned copy of the Location needed for Threaded timing)
+     * @return
+     */
     public final Location getLocation() {
         return new Location(super.getLocation().getRow(), super.getLocation().getCol());
     }
 
+    /**
+     * Moves this Player to a new Location - NOT CALLABLE BY STUDENTS
+     * @param loc the new location
+     */
     public final void moveTo(Location loc) {
         String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
         if (callingClass.endsWith("Player"))
@@ -272,6 +352,11 @@ public abstract class Player extends Actor {
             System.out.println("This Player has attempted an unauthorized moveTo");
         }
     }
+
+    /**
+     * Player's toString (override this)
+     * @return info about a Player
+     */
     public String toString() {
         return "Player";
     }

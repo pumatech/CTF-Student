@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"ctf2024"},{"l":"ctf2024.sampleTeam"}];updateSearchResults();

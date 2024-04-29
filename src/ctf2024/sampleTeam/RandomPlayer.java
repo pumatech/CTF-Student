@@ -14,7 +14,7 @@ public class RandomPlayer extends Player {
 
 	public Location getMoveLocation() {
 		List<Location> possibleMoveLocations = getGrid().getEmptyAdjacentLocations(getLocation()); 
-		if (possibleMoveLocations.size() == 0) return null;
+		if (possibleMoveLocations.isEmpty()) return null;
 		return possibleMoveLocations.get((int) (Math.random() * possibleMoveLocations.size()));
 	}
 

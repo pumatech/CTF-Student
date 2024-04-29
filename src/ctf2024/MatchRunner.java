@@ -4,6 +4,9 @@ import ctf2024.sampleTeam.SampleTeam;
 
 import java.awt.*;
 
+/**
+ * Class builds two Teams and starts a Match between them with few Rocks
+ */
 public class MatchRunner {
 
     public static void main(String[] args) {
