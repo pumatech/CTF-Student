@@ -22,7 +22,7 @@ public abstract class Player extends Actor {
     private static final int CARRY = 5;
 
     // The time the whole team has, in milliseconds. Each player is individually capped on time, not the team
-    private static final int TURNTIME = 500;
+    private static final int TURNTIME = 250;
 
     private Team team;
     private boolean hasFlag;

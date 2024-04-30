@@ -1,7 +1,6 @@
-package ctf2024.sampleTeam;
+package ctf2024.blueTeam;
 
 import ctf2024.Player;
-
 import info.gridworld.grid.Location;
 
 public class BeelinePlayer extends Player {

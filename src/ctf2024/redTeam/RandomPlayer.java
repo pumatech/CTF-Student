@@ -1,10 +1,9 @@
-package ctf2024.sampleTeam;
-
-import java.util.List;
+package ctf2024.redTeam;
 
 import ctf2024.Player;
-
 import info.gridworld.grid.Location;
+
+import java.util.List;
 
 public class RandomPlayer extends Player {
 

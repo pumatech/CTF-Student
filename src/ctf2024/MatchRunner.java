@@ -1,6 +1,7 @@
 package ctf2024;
 
-import ctf2024.sampleTeam.SampleTeam;
+import ctf2024.blueTeam.BlueTeam;
+import ctf2024.redTeam.RedTeam;
 
 import java.awt.*;
 
@@ -14,8 +15,8 @@ public class MatchRunner {
         // Both Teams are built for the "left side"
         // The Team assigned to the "right side" will automatically be mirrored when placed
 
-        Team a = new SampleTeam("Red Team", Color.RED);
-        Team b = new SampleTeam("Blue Team", Color.BLUE);
+        Team a = new RedTeam();
+        Team b = new BlueTeam();
 
         a.setOpposingTeam(b);
         b.setOpposingTeam(a);

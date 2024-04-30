@@ -196,7 +196,7 @@ public class WorldFrame<T> extends JFrame
         messageArea.setFont(messageArea.getFont().deriveFont(24f));
         content.add(new JScrollPane(messageArea), BorderLayout.NORTH);
 
-        pack();
+        //pack();
         repaint(); // to show message
         display.setGrid(gr);
     }
