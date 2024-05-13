@@ -14,7 +14,7 @@ public class CtfWorld extends ActorWorld {
     public static String extra = "";
     private final ArrayList<Player> players;
     private Team teamA, teamB;
-    private int steps;
+    private static int steps;
 
     /**
      * Constructs a new CtfWorld (default)
@@ -38,6 +38,13 @@ public class CtfWorld extends ActorWorld {
         this.setMessage("Click Run to begin");
     }
 
+    /**
+     * returns the current step number
+     * @return
+     */
+    public static int getStepNum() {
+        return steps;
+    }
     /**
      * Performs one "step" in the CtfWorld.
      * On the first step of a match, all Players from boith teams are added to the players instance variable

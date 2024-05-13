@@ -7,7 +7,7 @@ import java.awt.*;
 public class RedTeam extends Team {
 	
 	public RedTeam() {
-		super("Red Team", null);
+		super("Red Team", Color.RED);
 	}
 	
 	public void generateTeam() {
