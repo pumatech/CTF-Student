@@ -46,6 +46,7 @@ public class ImageDisplay extends AbstractDisplay
     private Class cl;
     private String imageFilename;
     private static final String imageExtension = ".gif";
+    private static final String imageExtension2 = ".png";
     private Map<String, Image> tintedVersions = new HashMap<String, Image>();
 
     /**
@@ -58,9 +59,17 @@ public class ImageDisplay extends AbstractDisplay
         URL url = cl.getClassLoader().getResource(
                 imageFilename + imageExtension);
 
-        if (url == null)
-            throw new FileNotFoundException(imageFilename + imageExtension
-                    + " not found.");
+        if (url == null) {
+            imageFilename = cl.getName().replace('.', '/');
+            url = cl.getClassLoader().getResource(
+                    imageFilename + imageExtension2);
+            if (url == null) {
+                throw new FileNotFoundException(imageFilename + imageExtension
+                        + " not found.");
+            }
+
+        }
+
         tintedVersions.put("", ImageIO.read(url));
     }
 

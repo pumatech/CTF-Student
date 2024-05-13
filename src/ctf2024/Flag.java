@@ -3,6 +3,8 @@ package ctf2024;
 import info.gridworld.actor.Actor;
 import info.gridworld.grid.Location;
 
+import java.awt.*;
+
 /**
  * This class holds the special Actor for the game's Flag
  */
@@ -18,7 +20,7 @@ public class Flag extends Actor {
      */
     public Flag(Team team) {
         this.team = team;
-        setColor(team.getColor());
+        setColor(Color.YELLOW);
     }
 
     /**

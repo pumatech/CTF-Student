@@ -22,7 +22,7 @@ public class MatchRunner {
         b.setOpposingTeam(a);
 
         // Build a Match with limited number of rock clumps - in the "real" competition there will be 75
-        Match match = new Match(a, b, 10);
+        Match match = new Match(a, b, 75);
 
         // start the match
         match.start();
