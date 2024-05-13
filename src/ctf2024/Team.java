@@ -281,6 +281,6 @@ public abstract class Team {
      * @return Whether this Team is the same as the other Team
      */
     public final boolean equals(Team team) {
-        return team.getSide() == side && team.getColor().equals(color) && team.getClass() == getClass();
+        return team.getSide() == side && team.getClass() == getClass();
     }
 }
