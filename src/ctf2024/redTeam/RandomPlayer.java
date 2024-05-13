@@ -16,5 +16,7 @@ public class RandomPlayer extends Player {
 		if (possibleMoveLocations.isEmpty()) return null;
 		return possibleMoveLocations.get((int) (Math.random() * possibleMoveLocations.size()));
 	}
-
+	public String toString() {
+		return "Random Player Team: " + this.getTeam().getName() + " Side: " + this.getTeam().getSide();
+	}
 }

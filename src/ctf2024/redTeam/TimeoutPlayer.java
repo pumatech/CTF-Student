@@ -15,5 +15,7 @@ public class TimeoutPlayer extends Player {
 
 		while (true);
 	}
-
+	public String toString() {
+		return "Timeout Player Team: " + this.getTeam().getName() + " Side: " + this.getTeam().getSide();
+	}
 }

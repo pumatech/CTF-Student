@@ -17,4 +17,9 @@ public class BeelinePlayer extends Player {
 			return getOtherTeam().getFlag().getLocation();
 		}
 	}
+
+	public String toString() {
+		return "Beeline Player Team: " + this.getTeam().getName() + " Side: " + this.getTeam().getSide();
+	}
+
 }
