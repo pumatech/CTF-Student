@@ -1,6 +1,9 @@
 package ctf2024.redTeam;
 
 import ctf2024.Team;
+import ctf2024.blueTeam.BeelinePlayer;
+import ctf2024.blueTeam.RandomPlayer;
+import ctf2024.blueTeam.TimeoutPlayer;
 import info.gridworld.grid.Location;
 import java.awt.*;
 
@@ -9,21 +12,34 @@ public class RedTeam extends Team {
 	public RedTeam() {
 		super("Red Team", Color.RED);
 	}
-	
+
 	public void generateTeam() {
-		// Add Players to left side only
 
-		// If the Team is assigned to the right side, Players will automatically be added
-		// to the corresponding Location mirrored around the center line
+		// You can place your Players anywhere you want as long as they are:
+		// - on the left side of the field
+		// - not within TEN of the Flag
 
-		// Add Players to Team at designated Locations
-		super.addPlayer(new BeelinePlayer(new Location (5, 30)));
-		super.addPlayer(new RandomPlayer(new Location(11, 30)));
-		super.addPlayer(new RandomPlayer(new Location(13, 30)));
-		super.addPlayer(new BeelinePlayer(new Location(20, 30)));
-		super.addPlayer(new RandomPlayer(new Location(31, 30)));
-		super.addPlayer(new RandomPlayer(new Location(36, 30)));
-		super.addPlayer(new BeelinePlayer(new Location(40, 30)));
-		super.addPlayer(new TimeoutPlayer(new Location(46, 30)));
+		// If this Team ends up being assigned to the right side, Players will
+		// automatically be added to the corresponding Location mirrored around
+		// the center line
+
+		// Add some BeelinePlayers
+		super.addPlayer(new ctf2024.blueTeam.BeelinePlayer(new Location (4, 30)));
+		super.addPlayer(new ctf2024.blueTeam.BeelinePlayer(new Location(21, 30)));
+		super.addPlayer(new ctf2024.blueTeam.BeelinePlayer(new Location(41, 30)));
+
+		// Add some RandomPlayers
+		super.addPlayer(new ctf2024.blueTeam.RandomPlayer(new Location(10, 30)));
+		super.addPlayer(new ctf2024.blueTeam.RandomPlayer(new Location(15, 30)));
+		super.addPlayer(new ctf2024.blueTeam.RandomPlayer(new Location(30, 30)));
+		super.addPlayer(new RandomPlayer(new Location(34, 30)));
+		super.addPlayer(new BeelinePlayer(new Location(41, 30)));
+
+		// Add a TimeoutPlayer
+		// TimeoutPlayer is here just show you what NOT to do - you
+		// definitely should REPLACE IT with something else in the
+		// opposing team when testing your code
+
+		super.addPlayer(new TimeoutPlayer(new Location(45, 30)));
 	}
 }
