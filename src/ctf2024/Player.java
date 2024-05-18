@@ -358,6 +358,6 @@ public abstract class Player extends Actor {
      * @return info about a Player
      */
     public String toString() {
-        return "Player";
+        return this.getClass().getSimpleName();
     }
 }
