@@ -16,7 +16,7 @@
 
 package info.gridworld.actor;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * A <code>Rock</code> is an actor that does nothing. It is commonly used to

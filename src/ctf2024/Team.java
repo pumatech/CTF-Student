@@ -6,50 +6,56 @@ import info.gridworld.grid.Location;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- * The class defines a CTF Team, which consists of an ArrayList of 8 Players,
- * a Flag, a team color, a team name, which side of the field the Team is on,
- * and various instance variable to help determine the team's score throughout
- * a match.
+ * This class organizes Players into a single team.  Each Team may have up to 8 Players and one Flag.
+ * It can also be used to derive information about this Team and the opposing Team.
  */
 public abstract class Team {
-    public static final int MAX_SIZE = 8;
+    public static final int MAX_PLAYERS = 8;
     public static final Location DEFAULT_FLAG_LOCATION = new Location(24, 10);
 
-    private final ArrayList<Player> players;
+    private Color color;
+    private String name;
+
+    private ArrayList<Player> players;
     private Grid<Actor> grid;
     private Flag flag;
+
     private Team opposingTeam;
-    private final Color color;
-    private final String name;
+    private int side;
+
     private volatile boolean hasWon;
     private int score;
     private int pickUps;
     private int tags;
     private int offensiveMoves;
-
-    private int side;
+    private int defensiveMoves;
+    private int carries;
 
     /**
-     * Constructs a new Team with a name and default color.  A Flag is automatically
-     * added, but Players must be added individually.
+     * Constructs a new Team with the specified name and color.
      *
-     * @param name  the team's name
-     * @param color the team's default color
+     * @param color the Team's color
      */
     public Team(String name, Color color) {
-        players = new ArrayList<>();
-        this.name = name;
         this.color = color;
-    }
+        this.name = name;
 
-    /**
-     * Generates a Team by adding Players (done in an extending subclass)
-     */
-    public void generateTeam() {
-    }
+        players = new ArrayList<>();
+        this.flag = new Flag(this);
 
+        this.hasWon = false;
+        this.score = 0;
+        this.pickUps = 0;
+        this.tags = 0;
+        this.offensiveMoves = 0;
+        this.defensiveMoves = 0;
+        this.carries = 0;
+
+        // overriding class should to add players in its constructor
+    }
     /**
      * Resets a team back to initial state for use in a new game
      */
@@ -59,22 +65,40 @@ public abstract class Team {
     }
 
     /**
-     * Adds a Player to the Team.  When Players are constructed, they should have an
-     * initial Location on the LEFT side of the field.  When the Team is added to the
-     * Grid, Players will automatically be reLocated to the right side of the screen
-     * if appropriate.
-     *
-     * @param player - The instance of Player to be added
+     * Generates a Team by adding Players (done in an extending subclass)
      */
+    public void generateTeam() {
+    }
+
+    /**
+     * Adds a Player to this Team (if there is room)
+     *
+     * @param player the Player to be added
+     */
+
     public final void addPlayer(Player player) {
-        if (players.size() < MAX_SIZE) {
+        if (players.size() < MAX_PLAYERS) {
             players.add(player);
             player.setTeam(this);
         } else {
-            throw new RuntimeException("Team is full - MAX_SIZE = " + MAX_SIZE);
+            System.err.println("Player not added since this Team is full - MAX_SIZE = " + MAX_PLAYERS);
         }
     }
 
+    /**
+     * sets the side (left or right) for this team
+     *
+     * @param side
+     */
+    public void setSide(int side) {
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.equals(CtfWorld.thisYearsPackage+".CtfWorld")) {
+            this.side = side;
+        } else {
+            CtfWorld.addExtraText("Cheat");
+            System.err.println(callingClass + " has cheated and tried to change the side of a team");
+        }
+    }
     /**
      * Places all Players and Flag from a Team onto the correct side of the Grid.
      * Players can not be placed too close to their own Flag or they will be automatically
@@ -95,105 +119,136 @@ public abstract class Team {
         flag = new Flag(this);
         flag.putSelfInGrid(grid, adjustForSide(DEFAULT_FLAG_LOCATION, grid));
         resetTeam();
-        for (Player player : players) {
+        Iterator<Player> it = players.iterator();
+        while (it.hasNext()) {
+            Player player = it.next();
             double dist = Math.sqrt(Math.pow(player.getStartLocation().getRow() - DEFAULT_FLAG_LOCATION.getRow(), 2)
                     + Math.pow(player.getStartLocation().getCol() - DEFAULT_FLAG_LOCATION.getCol(), 2));
             if (player.getStartLocation().getCol() >= grid.getNumCols() / 2 || player.getStartLocation().getCol() < 0 || dist < 10.0) {
                 System.err.println("Someone has cheated and given their players an invalid start location");
-                Location nextLoc;
-                do {
-                    nextLoc = new Location((int) (Math.random() * grid.getNumRows() - 1), 0);
-                } while (grid.get(nextLoc) != null);
-                player.setStartLocation(nextLoc);
+                it.remove();
+//                Location nextLoc;
+//                do {
+//                    nextLoc = new Location((int) (Math.random() * grid.getNumRows() - 1), 0);
+//                } while (grid.get(nextLoc) != null);
+//                player.setStartLocation(nextLoc);
             }
-            player.putSelfInGridProtected(grid, adjustForSide(player.getStartLocation(), grid));
+            else {
+                player.putSelfInGridProtected(grid, adjustForSide(player.getStartLocation(), grid));
+            }
+        }
+    }
+
+    protected final void addPickUp() {
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.equals(CtfWorld.thisYearsPackage+".Player")) {
+            pickUps++;
+        } else {
+            CtfWorld.addExtraText("Cheat");
+            System.err.println(callingClass + " has cheated and tried to change the score");
+        }
+    }
+
+    protected final void addTag() {
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.equals(CtfWorld.thisYearsPackage+".Player")) {
+            tags++;
+        } else {
+            CtfWorld.addExtraText("Cheat");
+            System.err.println(callingClass + " has cheated and tried to change the score");
+        }
+    }
+
+    protected final void addCarry() {
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.equals(CtfWorld.thisYearsPackage+".Player")) {
+            carries++;
+        } else {
+            CtfWorld.addExtraText("Cheat");
+            System.err.println(callingClass + " has cheated and tried to change the score");
+        }
+    }
+
+    protected final void addOffensiveMove() {
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.equals(CtfWorld.thisYearsPackage+".Player")) {
+            offensiveMoves++;
+        } else {
+            CtfWorld.addExtraText("Cheat");
+            System.err.println(callingClass + " has cheated and tried to change the score");
+        }
+    }
+
+    protected final void addDefensiveMove() {
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.equals(CtfWorld.thisYearsPackage+".Player")) {
+            defensiveMoves++;
+        } else {
+            CtfWorld.addExtraText("Cheat");
+            System.err.println(callingClass + " has cheated and tried to change the score");
         }
     }
 
     /**
-     * Scores a Flag pick-up. NOT CALLABLE BY STUDENTS
+     * Gets current point stats for this Team
      */
-    protected final void addPickUp() {
-        pickUps++;
+    public String getStats() {
+        return String.format("%s  had:\n%d defensive moves\n%d offensive moves\n%d carries\n%d tagouts\n%d Flag pickups\nfor a total score of: %d\n", name, defensiveMoves, offensiveMoves, carries, tags, pickUps, score);
     }
 
-    /**
-     * Scores a tag. NOT CALLABLE BY STUDENTS
-     */
-    protected final void addTag() {
-        tags++;
-    }
-
-    /**
-     * Scores an offensive move. NOT CALLABLE BY STUDENTS
-     */
-
-    protected final void addOffensiveMove() {
-        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
-        offensiveMoves++;
-    }
-
-    /**
-     * Displays a Team's stats in the console - usefulful for debugging.  DO NOT USE IF FINAL CODE
-     *
-     * @param steps - how many steps
-     */
-    public void displayStats(int steps) {
-        System.out.println(name + " got " + pickUps + " pick ups and " + tags + " tags. They made " + offensiveMoves
-                + " steps on the offencive side, and were on the other side " + offensiveMoves / (steps + players.size()) + "% of the game");
-    }
-
-    /**
-     * Adds points to the Team's score. NOT CALLABLE BY STUDENTS
-     *
-     * @param s The score to add
-     */
     protected final void addScore(int s) {
-        score += s;
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.equals(CtfWorld.thisYearsPackage+".Player")) {
+            score += s;
+        } else {
+            CtfWorld.addExtraText("Cheat");
+            System.err.println(callingClass + " has cheated and tried to change the score");
+        }
     }
 
     /**
-     * Adjusts a Location to the proper side
+     * Mirrors a Location from the left side of the field to the right
      *
-     * @param loc The location to be adjusted
-     * @param grid The grid in which the Location is valid
-     * @return The adjusted Location
+     * @param loc  the Location on the left side to be mirrored
+     * @param grid the Grid in which this Location is valid
+     * @return the new mirrored Location on the right hand side
      */
     public final Location adjustForSide(Location loc, Grid<Actor> grid) {
         return new Location(loc.getRow(), (side == 0 ? loc.getCol() : grid.getNumCols() - 1 - loc.getCol()));
     }
 
-    /**
-     * Setter for Opposing Team
-     *
-     * @param opposingTeam The opposing Team
-     */
     protected final void setOpposingTeam(Team opposingTeam) {
         this.opposingTeam = opposingTeam;
     }
 
-    /**
-     * Declares that this Team has won
-     */
     protected final void setHasWon() {
-        hasWon = true;
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.equals(CtfWorld.thisYearsPackage+".CtfWorld")) {
+            hasWon = true;
+        } else {
+            CtfWorld.addExtraText("Cheat");
+            System.err.println(callingClass + " has cheated and tried change the winning team");
+        }
     }
 
     /**
-     * Checks a Location to see if it is on this Team's side or not
+     * Determines whether or not a Location is on the same side (left or right) as this Player
      *
-     * @param loc The Location to check
-     * @return Whether it's on this Team's side
+     * @param loc the Location to be tested
+     * @return whether or not the Location is on the same side as this Player
      */
     public final boolean onSide(Location loc) {
-        return side == 0 && loc.getCol() < grid.getNumCols() / 2 || side == 1 && loc.getCol() >= grid.getNumCols() / 2;
+        return side == 0 && loc.getCol() < 50 || side == 1 && loc.getCol() >= 50;
     }
 
-    /**
-     * Checks a Location to see if it is near a Team's Flag or not
-     */
     final static int RANGE = 4;
 
+    /**
+     * Determines whether or not a Location is within 4 spaces of this Player's Flag
+     *
+     * @param loc the Location to be tested
+     * @return whether or not the Location is within 4 spaces of this Player's Flag
+     */
     public final boolean nearFlag(Location loc) {
         if (flag == null || flag.getLocation() == null) return false;
         Location fLoc = flag.getLocation();
@@ -203,83 +258,77 @@ public abstract class Team {
     }
 
     /**
-     * Getter for the ArrayList of a Team's Players
+     * Returns an ArrayList of this Team's Players
      *
-     * @return This Team's Players
+     * @return this Team's Players
      */
     public final ArrayList<Player> getPlayers() {
         return (ArrayList<Player>) players.clone();
     }
 
     /**
-     * Getter for the Team's Flag
+     * Returns this Team's Flag
      *
-     * @return This Team's Flag instance
+     * @return this Team's Flag
      */
     public final Flag getFlag() {
         return flag;
     }
 
     /**
-     * Getter for the instance of the opposing Team
+     * Returns this Team's opposing Team
      *
-     * @return The opposing Team instance
+     * @return this Team's opposing Team
      */
     public final Team getOpposingTeam() {
         return opposingTeam;
     }
 
     /**
-     * Getter for a Team's Color
+     * Returns this Team's color
      *
-     * @return The Team's Color
+     * @return this Team's color
      */
     public final Color getColor() {
         return color;
     }
 
     /**
-     * Getter for a Team's name
+     * Returns this Team's name
      *
-     * @return The Team's name
+     * @return this Team's name
      */
     public final String getName() {
         return name;
     }
 
     /**
-     * Getter for a Team's score
+     * Returns this Team's score
      *
-     * @return The Team's current score
+     * @return this Team's score
      */
     public final int getScore() {
         return score;
     }
 
     /**
-     * Getter for a Team's Side (0=Left, 1=Right)
+     * Returns this Team's side
      *
-     * @return The Team's side
+     * @return this Team's side
      */
     public final int getSide() {
         return side;
     }
 
     /**
-     * Getter to determine if a Team has won
+     * Returns whether or not this Team has won the game
      *
-     * @return Whether a Team has won
+     * @return whether or not this Team has won the game
      */
     public final boolean hasWon() {
         return hasWon;
     }
 
-    /**
-     * Compares another t=Team to see if it is the same as this Team
-     *
-     * @param team The other Team
-     * @return Whether this Team is the same as the other Team
-     */
     public final boolean equals(Team team) {
         return team.getSide() == side && team.getClass() == getClass();
     }

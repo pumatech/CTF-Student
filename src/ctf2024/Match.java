@@ -40,6 +40,7 @@ public class Match {
         teamA = a;
         teamB = b;
         world = new CtfWorld(a, b);
+        System.gc();
         numRocks = rocks;
     }
 
@@ -147,5 +148,9 @@ public class Match {
      */
     private static double distance(Location loc1, Location loc2) {
         return Math.sqrt(Math.pow(loc1.getRow() - loc2.getRow(), 2) + Math.pow(loc1.getCol() - loc2.getCol(), 2));
+    }
+
+    public final void close() {
+        world.close();
     }
 }

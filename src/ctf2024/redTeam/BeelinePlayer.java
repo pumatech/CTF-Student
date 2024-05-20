@@ -10,6 +10,7 @@ public class BeelinePlayer extends Player {
 	}
 
 	public Location getMoveLocation() {
+		System.out.println("Blue get");
 		int dir;
 		if (this.hasFlag()) {
 			return this.getMyTeam().getFlag().getLocation();

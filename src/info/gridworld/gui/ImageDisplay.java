@@ -18,11 +18,8 @@
 
 package info.gridworld.gui;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Rectangle;
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.RGBImageFilter;
 import java.io.FileNotFoundException;
@@ -30,8 +27,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.imageio.ImageIO;
 
 /**
  * An ImageDisplay displays an object as a tinted image from an image file whose

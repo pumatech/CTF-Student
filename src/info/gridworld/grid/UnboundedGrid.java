@@ -20,8 +20,8 @@
 package info.gridworld.grid;
 
 import java.util.ArrayList;
-
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An <code>UnboundedGrid</code> is a rectangular grid with an unbounded number of rows and

@@ -18,10 +18,8 @@
 
 package info.gridworld.gui;
 
-import java.awt.Point;
-import java.awt.Dimension;
-import java.awt.Color;
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * A <code>PseudoInfiniteViewport</code> is a <code>JViewport</code>

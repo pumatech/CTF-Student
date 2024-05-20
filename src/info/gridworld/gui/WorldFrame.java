@@ -23,47 +23,16 @@ import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 import info.gridworld.world.World;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.net.URL;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-
+import java.awt.*;
+import java.awt.event.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
+import java.text.MessageFormat;
+import java.util.*;
 
 /**
  * The WorldFrame displays a World and allows manipulation of its occupants.
@@ -74,6 +43,9 @@ import java.io.StringWriter;
  */
 public class WorldFrame<T> extends JFrame
 {
+
+    public static boolean SHUTDOWN_ON_CLOSE = true;
+
     private GUIController<T> control;
     private GridPanel display;
     private JTextArea messageArea;
@@ -93,7 +65,7 @@ public class WorldFrame<T> extends JFrame
      */
     public WorldFrame(World<T> world)
     {
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         this.world = world;
         count++;
@@ -115,7 +87,7 @@ public class WorldFrame<T> extends JFrame
             public void windowClosing(WindowEvent event)
             {
                 count--;
-                if (count == 0)
+                if (count == 0 && SHUTDOWN_ON_CLOSE)
                     System.exit(0);
             }
         });
@@ -196,7 +168,7 @@ public class WorldFrame<T> extends JFrame
         messageArea.setFont(messageArea.getFont().deriveFont(24f));
         content.add(new JScrollPane(messageArea), BorderLayout.NORTH);
 
-        //pack();
+        pack();
         repaint(); // to show message
         display.setGrid(gr);
     }
@@ -604,5 +576,8 @@ public class WorldFrame<T> extends JFrame
                 area.copy(); // copy to clipboard
             }
         }
+    }
+    public void stop() {
+        control.stop();
     }
 }

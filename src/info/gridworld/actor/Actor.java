@@ -19,7 +19,7 @@ package info.gridworld.actor;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * An <code>Actor</code> is an entity with a color and direction that can act.

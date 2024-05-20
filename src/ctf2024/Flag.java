@@ -1,74 +1,100 @@
 package ctf2024;
 
 import info.gridworld.actor.Actor;
+import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 
-import java.awt.*;
-
 /**
- * This class holds the special Actor for the game's Flag
+ * Special Actor that acts as the Flag in a CTF Game.  If placed in the Grid, it is available
+ * to be picked up.  If it exists, but is not in a Grid that means a Player has picked it up and
+ * is actively carrying it.
  */
 public class Flag extends Actor {
 
-    private final Team team;
+    private Team team;
     private Player carrier;
 
     /**
-     * Constructs a Flag for a particular Team and initializes it to the Team's color
-     *
-     * @param team the Team owning this flag
+     * Constructs a new Flag.  This is only done when a Team is created and is only allowed by the CTF Team superclass.
+     * @param team
      */
     public Flag(Team team) {
-        this.team = team;
-        setColor(Color.YELLOW);
-    }
-
-    /**
-     * Overridden act method to do nothing
-     */
-    public final void act() {
-    } // I want only players to get called to act
-
-    /**
-     * Allows a Player to pick up the Flag - NOT CALLABLE BY STUDENTS
-     *
-     * @param player The Player picking up the Flag
-     */
-    protected final void pickUp(Player player) {
         String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
-        if (callingClass.endsWith(".Player")) {
-            super.removeSelfFromGrid();
-            this.carrier = player;
-        } else {
-            System.err.println("Someone has cheated and tried to remove a Flag from the grid");
-            CtfWorld.extra += " Cheat";
+        if (callingClass.equals(CtfWorld.thisYearsPackage+".Team")) {
+            this.team = team;
+            setColor(team.getColor());
+        }
+        else {
+            CtfWorld.addExtraText("Cheat");
+            System.err.println(callingClass + " has cheated and tried to construct a Flag");
         }
     }
 
     /**
-     * Flag is removed from the Grid - NOT CALLABLE BY STUDENTS
+     * Adds the Flag to a Grid, meaning that it is available to be picked up.
+     * This can only be done by the ActorWorld class at Construction time or by the Player
+     * superclass when a Flag is dropped and becomes available to pick up again.
+     *
+     * @param grid the grid into which to place the Flag
+     * @param loc the location into which the Flag should be placed
+     */
+    public final void putSelfInGrid(Grid<Actor> grid, Location loc) {
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.equals(CtfWorld.thisYearsPackage+".Team") || callingClass.equals(CtfWorld.thisYearsPackage+".Player")) {
+            super.putSelfInGrid(grid, loc);
+        }
+        else {
+            CtfWorld.addExtraText("Cheat");
+            System.err.println(callingClass + " has cheated and tried to add a Flag to the grid");
+        }
+    }
+
+    /**
+     * Flags do not act
+      */
+    public final void act() {
+    }
+
+    protected void pickUp(Player player) {
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.equals(CtfWorld.thisYearsPackage+".Player")) {
+            super.removeSelfFromGrid();
+            this.carrier = player;
+        }
+        else {
+            CtfWorld.addExtraText("Cheat");
+            System.err.println(callingClass + " has cheated and tried to pic up the Flag");
+        }
+    }
+
+    /**
+     * This method is prohibited to be called by any Players
      */
     public final void removeSelfFromGrid() {
         String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
-        if (callingClass.endsWith("CtfWorld"))
-            super.removeSelfFromGrid();
-        else {
-            System.err.println("Someone has cheated and tried to remove a player from the grid");
-            CtfWorld.extra += " Cheat";
-        }
+//        System.out.println(callingClass);
+//        if (callingClass.endsWith("CtfWorld"))
+//            super.removeSelfFromGrid();
+//        else {
+            CtfWorld.addExtraText("Cheat");
+            System.err.println(callingClass + "has cheated and tried to remove the Flag");
+//        }
     }
 
     /**
-     * Getter to get this Flag's Team
-     * @return the Team
+     * Gets the team that owns  this Flag
+     * @return the team that owns thi Flag
      */
     public Team getTeam() {
         return team;
     }
 
     /**
-     * Getter to get this Flag's Location
-     * @return the Location
+     * Returns the location of the current Flag.  If it is being carried, it will return the Location
+     * of the Player that is currently carrying it.  If it is not being carried, it will return the
+     * Location of the Flag instance in the Grid.
+     *
+     * @return the Location of the Flag whether or not it is being carried
      */
     public Location getLocation() {
         if (getGrid() == null && carrier != null)
@@ -77,8 +103,8 @@ public class Flag extends Actor {
     }
 
     /**
-     * Getter to see if Flag is being carried or not
-     * @return Whether this Flag is being carried
+     * Returns an indication of whether or not the Flag is currently being carried
+     * @return whether or not the Flag is currently being carried
      */
     public boolean beingCarried() {
         return getGrid() == null && carrier != null;

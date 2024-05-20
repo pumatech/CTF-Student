@@ -3,8 +3,6 @@ package ctf2024;
 import ctf2024.blueTeam.BlueTeam;
 import ctf2024.redTeam.RedTeam;
 
-import java.awt.*;
-
 /**
  * Class builds two Teams and starts a Match between them with few Rocks
  */

@@ -3,6 +3,7 @@ package ctf2024;
 import info.gridworld.actor.ActorWorld;
 import info.gridworld.grid.Location;
 
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -15,6 +16,11 @@ public class CtfWorld extends ActorWorld {
     private final ArrayList<Player> players;
     private Team teamA, teamB;
     private static int steps;
+    public static final String thisYearsPackage = "ctf2024";
+
+    public static void addExtraText(String text) {
+        CtfWorld.extra += " " + text;
+    }
 
     /**
      * Constructs a new CtfWorld (default)
@@ -32,10 +38,11 @@ public class CtfWorld extends ActorWorld {
      */
     public CtfWorld(Team a, Team b) {
         super();// img won't work
-        players = new ArrayList<>();
         teamA = a;
         teamB = b;
+        players = new ArrayList<>();
         this.setMessage("Click Run to begin");
+        steps = 0;
     }
 
     /**
@@ -47,56 +54,71 @@ public class CtfWorld extends ActorWorld {
     }
     /**
      * Performs one "step" in the CtfWorld.
-     * On the first step of a match, all Players from boith teams are added to the players instance variable
+     * On the first step of a match, all Players from both teams are added to the players instance variable
      * After the last step, a winner is determined based on scores
      * Intermediate steps collect all the Players and shuffle them together and have them all act in random order
      */
     public void step() {
-        if (players.isEmpty()) {
-            players.addAll(teamA.getPlayers());
-            players.addAll(teamB.getPlayers());
-        }
-        steps++;
-        if (steps == MAX_GAME_LENGTH) {
-            if (teamA.getScore() > teamB.getScore()) {
-                teamA.setHasWon();
-            } else {
-                teamB.setHasWon();
+        // make sure this is only called from GUI
+        String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
+        if (callingClass.equals("info.gridworld.gui.GUIController")) {
+            // if first step add players
+            if (players.isEmpty()) {
+                players.addAll(teamA.getPlayers());
+                players.addAll(teamB.getPlayers());
             }
-            announceScores();
-        } else if (steps < MAX_GAME_LENGTH){
-            Collections.shuffle(players);
-            for (Player p : players) {
+            // game over due to number of steps
+            if (this.steps >= MAX_GAME_LENGTH) {
+                if (this.teamA.getScore() > this.teamB.getScore()) {
+                    this.teamA.setHasWon();
+                } else if (this.teamB.getScore() > this.teamA.getScore()) {
+                    this.teamB.setHasWon();
+                }
+                else { // tie!
+                    boolean coin = (Math.random() < 0.5);
+                    if (coin) {
+                        this.teamA.setHasWon();
+                    }
+                    else {
+                        this.teamB.setHasWon();
+                    }
+                }
+                return;
+            }
+            // game active - make all Players act
+            this.steps++;
+            Collections.shuffle(this.players);
+            System.gc();
+            for (Player p : this.players) {
                 p.act();
                 if (p.hasFlag()) {
+                    // check for win (has flag on own side)
                     if (p.getTeam().onSide(p.getLocation())) {
                         p.getTeam().setHasWon();
                         return;
                     }
                 }
             }
-            announceScores();
         }
+
+        // update displayed scores
+        this.displayScores();
+
     }
 
-    /**
-     * Updates the CtfWorld's display to announce the current scores
-     */
-    protected final void announceScores() {
-        String scoreAnnouncement = "step: " + steps + "   \t";
-        if (teamA.getSide() == 0) {
-            scoreAnnouncement += teamA.getName() + ": " + teamA.getScore();
-            scoreAnnouncement += "   \t" + teamB.getName() + ": " + teamB.getScore();
+    private final void displayScores() {
+        String scoreText = "step: " + steps + "   \t";
+        if (this.teamA.getSide() == 0) {
+            scoreText += this.teamA.getName() + ": " + this.teamA.getScore();
+            scoreText += "   \t" + this.teamB.getName() + ": " + this.teamB.getScore();
+        } else {
+            scoreText += this.teamB.getName() + ": " + this.teamB.getScore();
+            scoreText += "   \t" + this.teamA.getName() + ": " + this.teamA.getScore();
         }
-        else {
-            scoreAnnouncement += teamB.getName() + ": " + teamB.getScore();
-            scoreAnnouncement += "   \t" + teamA.getName() + ": " + teamA.getScore();
-        }
-        scoreAnnouncement += extra;
-        this.setMessage(scoreAnnouncement);
-        extra = "";
+        scoreText += CtfWorld.extra;
+        this.setMessage(scoreText);
+        CtfWorld.extra = "";
     }
-
     /**
      * Setter to (re)set the two teams in this World
      * @param a Team 1
@@ -132,4 +154,12 @@ public class CtfWorld extends ActorWorld {
      */
     public boolean locationClicked(Location loc) { return true; }
 
+    /**
+     * closes the GUI windows of a CTFWorld
+     */
+    public void close() {
+        frame.stop();
+        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+        System.gc();
+    }
 }

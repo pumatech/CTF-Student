@@ -18,9 +18,7 @@
 
 package info.gridworld.gui;
 
-import java.awt.Graphics2D;
-import java.awt.Component;
-import java.awt.Rectangle;
+import java.awt.*;
 
 /**
  * The <code>Display</code> interface contains the method needed to display a

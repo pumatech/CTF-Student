@@ -19,15 +19,10 @@
 
 package info.gridworld.gui;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Component;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
-import java.awt.Rectangle;
 
 /**
  * The DefaultDisplay draws the object's text property with a background color

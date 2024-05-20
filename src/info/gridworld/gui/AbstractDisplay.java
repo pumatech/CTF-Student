@@ -18,12 +18,11 @@
 
 package info.gridworld.gui;
 
-import java.awt.Rectangle;
-import java.beans.*;
-import java.lang.reflect.*;
-import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.BasicStroke;
+import java.awt.*;
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 
 /**
  * This class provides common implementation code for drawing objects. It will

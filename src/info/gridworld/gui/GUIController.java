@@ -18,13 +18,16 @@
 
 package info.gridworld.gui;
 
-import info.gridworld.grid.*;
+import info.gridworld.grid.Grid;
+import info.gridworld.grid.Location;
 import info.gridworld.world.World;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Modifier;
@@ -32,10 +35,6 @@ import java.util.Comparator;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
-
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.*;
 
 /**
  * The GUIController controls the behavior in a WorldFrame. <br />

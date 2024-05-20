@@ -18,11 +18,10 @@ package info.gridworld.gui;
 
 import info.gridworld.grid.Location;
 
-import java.awt.Component;
+import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyEditorSupport;
 import java.text.NumberFormat;
-import javax.swing.JFormattedTextField;
-import javax.swing.JPanel;
 
 /**
  * A property editor for the Location type. <br />
