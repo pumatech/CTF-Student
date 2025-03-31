@@ -1,8 +1,8 @@
-package ctf2024.redTeam;
+package ctf2025.redTeam;
 
-import ctf2024.Team;
-import ctf2024.blueTeam.BeelinePlayer;
-import ctf2024.blueTeam.RandomPlayer;
+import ctf2025.Team;
+import ctf2025.blueTeam.BeelinePlayer;
+import ctf2025.blueTeam.RandomPlayer;
 import info.gridworld.grid.Location;
 
 import java.awt.*;

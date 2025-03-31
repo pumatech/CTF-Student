@@ -1,6 +1,6 @@
-package ctf2024.blueTeam;
+package ctf2025.redTeam;
 
-import ctf2024.Player;
+import ctf2025.Player;
 import info.gridworld.grid.Location;
 
 public class BeelinePlayer extends Player {
@@ -10,6 +10,7 @@ public class BeelinePlayer extends Player {
 	}
 
 	public Location getMoveLocation() {
+		System.out.println("Blue get");
 		int dir;
 		if (this.hasFlag()) {
 			return this.getMyTeam().getFlag().getLocation();

@@ -1,6 +1,6 @@
-package ctf2024.redTeam;
+package ctf2025.blueTeam;
 
-import ctf2024.Player;
+import ctf2025.Player;
 import info.gridworld.grid.Location;
 
 import java.util.List;

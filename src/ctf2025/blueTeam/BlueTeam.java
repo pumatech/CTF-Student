@@ -1,6 +1,6 @@
-package ctf2024.blueTeam;
+package ctf2025.blueTeam;
 
-import ctf2024.Team;
+import ctf2025.Team;
 import info.gridworld.grid.Location;
 
 public class BlueTeam extends Team {

@@ -1,4 +1,4 @@
-package ctf2024;
+package ctf2025;
 
 import info.gridworld.actor.Actor;
 import info.gridworld.actor.Rock;
@@ -91,6 +91,7 @@ public class Match {
         System.out.println("Starting Match: " + teamA.getName() + " vs. " + teamB.getName());
 
         world.show();
+        world.setMessage(msg);
 
         while (!teamA.hasWon() && !teamB.hasWon()) {
         }

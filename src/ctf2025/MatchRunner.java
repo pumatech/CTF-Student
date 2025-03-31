@@ -1,7 +1,7 @@
-package ctf2024;
+package ctf2025;
 
-import ctf2024.blueTeam.BlueTeam;
-import ctf2024.redTeam.RedTeam;
+import ctf2025.seedTeam.SeedTeam;
+import teams2024.blueTeamTucker.BlueTeamTwo;
 
 /**
  * Class builds two Teams and starts a Match between them with few Rocks
@@ -13,8 +13,8 @@ public class MatchRunner {
         // Both Teams are built for the "left side"
         // The Team assigned to the "right side" will automatically be mirrored when placed
 
-        Team a = new RedTeam();
-        Team b = new BlueTeam();
+        Team a = new BlueTeamTwo();
+        Team b = new SeedTeam();
 
         a.setOpposingTeam(b);
         b.setOpposingTeam(a);

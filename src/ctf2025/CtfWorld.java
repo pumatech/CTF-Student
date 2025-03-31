@@ -1,4 +1,4 @@
-package ctf2024;
+package ctf2025;
 
 import info.gridworld.actor.ActorWorld;
 import info.gridworld.grid.Location;
@@ -16,7 +16,7 @@ public class CtfWorld extends ActorWorld {
     private final ArrayList<Player> players;
     private Team teamA, teamB;
     private static int steps;
-    public static final String thisYearsPackage = "ctf2024";
+    public static final String thisYearsPackage = "ctf2025";
 
     public static void addExtraText(String text) {
         CtfWorld.extra += " " + text;
@@ -59,6 +59,8 @@ public class CtfWorld extends ActorWorld {
      * Intermediate steps collect all the Players and shuffle them together and have them all act in random order
      */
     public void step() {
+        if (teamA.hasWon() || teamB.hasWon()) return;  // game is over
+
         // make sure this is only called from GUI
         String callingClass = Thread.currentThread().getStackTrace()[2].getClassName();
         if (callingClass.equals("info.gridworld.gui.GUIController")) {
@@ -73,29 +75,26 @@ public class CtfWorld extends ActorWorld {
                     this.teamA.setHasWon();
                 } else if (this.teamB.getScore() > this.teamA.getScore()) {
                     this.teamB.setHasWon();
-                }
-                else { // tie!
+                } else { // tie!
                     boolean coin = (Math.random() < 0.5);
                     if (coin) {
                         this.teamA.setHasWon();
-                    }
-                    else {
+                    } else {
                         this.teamB.setHasWon();
                     }
                 }
-                return;
-            }
-            // game active - make all Players act
-            this.steps++;
-            Collections.shuffle(this.players);
-            System.gc();
-            for (Player p : this.players) {
-                p.act();
-                if (p.hasFlag()) {
-                    // check for win (has flag on own side)
-                    if (p.getTeam().onSide(p.getLocation())) {
-                        p.getTeam().setHasWon();
-                        return;
+            } else {
+                // game active - make all Players act
+                this.steps++;
+                Collections.shuffle(this.players);
+                System.gc();
+                for (Player p : this.players) {
+                    p.act();
+                    if (p.hasFlag()) {
+                        // check for win (has flag on own side)
+                        if (p.getTeam().onSide(p.getLocation())) {
+                            p.getTeam().setHasWon();
+                        }
                     }
                 }
             }
